@@ -43,15 +43,15 @@ class DoublyLinkedList:
     the old head node's previous pointer accordingly.
     """
     def add_to_head(self, value):
-        value = ListNode(value)
+        node = ListNode(value)
         if self.length == 0:
+            self.tail = node
+            self.head = node
             self.length+= 1
-            self.tail = value
-            self.head = value
         else:
             self.length+= 1
             prvhead = self.head
-            self.head = value
+            self.head = node
             self.head.next = prvhead
             prvhead.prev = self.head
 
@@ -67,32 +67,32 @@ class DoublyLinkedList:
             val = self.head
             self.head = None
             self.tail = None
-            self.length-=1
+            self.length = 0
             return val.value
-        else:
-            val = self.head
-            self.head = self.head.next
-            self.head.prev = None
-            self.length-=1
-            return val.value
+
+        val = self.head
+        self.head = self.head.next
+        self.head.prev = None
+        self.length-=1
+        return val.value
     """
     Wraps the given value in a ListNode and inserts it
     as the new tail of the list. Don't forget to handle
     the old tail node's next pointer accordingly.
     """
     def add_to_tail(self, value):
-        value = ListNode(value)
+        node = ListNode(value)
         if self.length == 0:
-            self.head = value
-            self.tail = value
+            self.head = node
+            self.tail = node
             self.length+=1
 
         else:
             prvtail = self.tail
+            self.tail = node
             prvtail.next = self.tail
-            self.tail = value
-            self.tail.next = None
             self.tail.prev = prvtail
+            # self.tail.next = None
             self.length+=1
 
 
@@ -108,7 +108,7 @@ class DoublyLinkedList:
             val = self.tail.value
             self.tail = None
             self.head = None
-            self.length-=1
+            self.length = 0
             return val
         else:
             val = self.tail.value
@@ -122,22 +122,24 @@ class DoublyLinkedList:
     List and inserts it as the new head node of the List.
     """
     def move_to_front(self, node):
-        if self.length <= 1 or self.head == node:
+        if self.length == 1 or self.head == node:
             return None
         elif self.tail == node:
             self.remove_from_tail()
             self.add_to_head(node.value)
-            print(self.head.value)
+            # print(self.head.value)
 
         else:
-            nxt = node.next
-            prv = node.prev
-            prv.next = nxt
-            nxt.prev = prv
-            node.next = self.head.next
-            self.head = node
-            self.head.prev = None
-            print(self.head.value)
+            self.delete(node)
+            self.add_to_head(node.value)
+            # nxt = node.next
+            # prv = node.prev
+            # prv.next = nxt
+            # nxt.prev = prv
+            # node.next = self.head.next
+            # self.head = node
+            # self.head.prev = None
+            ## print(self.head.value)
 
 
     """
@@ -164,15 +166,13 @@ class DoublyLinkedList:
     order of the other elements of the List.
     """
     def delete(self, node):
-        if node == None:
+        if node is None:
             return None
-        if self.length == 0:
-            return
-        if node == self.tail and node == self.head:
+        if self.length == 1:
             self.head = None
             self.tail = None
-            self.length-= 1
-        if node == self.head:
+            self.length = 0
+        elif node == self.head:
 
             self.remove_from_head()
         elif node == self.tail:
@@ -183,6 +183,32 @@ class DoublyLinkedList:
             nxt.prev = prv
             prv.next = nxt
             self.length -= 1
+# def delete(self, node):
+#         # one node in list
+#         if self.length == 1:
+#             # update head and tail to None
+#             self.head = None
+#             self.tail = None
+#             # update length (empty)
+#             self.length = 0
+#         # if node is head
+#         elif node == self.head:
+#             # remove head
+#             self.remove_from_head()
+#         # if node is tail
+#         elif node == self.tail:
+#             # remove tail
+#             self.remove_from_tail()
+#         else:
+#             # references to previous and next node of passed in node
+#             next_node = node.next
+#             prev_node = node.prev
+#             # update next node's previous to current's previous
+#             next_node.prev = prev_node
+#             # update previous node's next to current's next
+#             prev_node.next = next_node
+#             # update length (decrease)
+#             self.length -= 1
 
 
 
